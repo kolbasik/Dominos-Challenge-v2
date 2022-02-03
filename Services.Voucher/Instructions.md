@@ -1,6 +1,6 @@
 # Code Refactoring
-This archive contains a Visual Studio solution with a web service that provides access to voucher information.  
-The voucher information is loaded from a file named data.json.  
+This archive contains a Visual Studio solution with a web service that provides access to voucher information.
+The voucher information is loaded from a file named data.json.
 Your task is to complete development of this service and improve it in any way you think appropriate.
 
 ## The Challenge

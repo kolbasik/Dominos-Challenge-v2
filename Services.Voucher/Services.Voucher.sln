@@ -7,7 +7,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services.Voucher", "Service
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services.Voucher.Test.Unit", "Services.Voucher.Test.Unit\Services.Voucher.Test.Unit.csproj", "{84BFB2C9-3EBE-4BA7-86CC-9A4F8E01A349}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.Voucher.Test.Performance", "Services.Voucher.Test.Performance\Services.Voucher.Test.Performance.csproj", "{247089A9-5434-47B4-ADCF-88301CC92F2A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services.Voucher.Test.Performance", "Services.Voucher.Test.Performance\Services.Voucher.Test.Performance.csproj", "{247089A9-5434-47B4-ADCF-88301CC92F2A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{30019DEB-DF47-4A3D-88AF-0FEDD278353E}"
+	ProjectSection(SolutionItems) = preProject
+		..\.editorconfig = ..\.editorconfig
+		..\.gitattributes = ..\.gitattributes
+		..\.gitignore = ..\.gitignore
+		Instructions.md = Instructions.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
