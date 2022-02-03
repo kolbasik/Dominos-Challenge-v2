@@ -1,12 +1,20 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
+using Services.Voucher.Models;
+using Services.Voucher.Repository;
 
 namespace Services.Voucher
 {
+  [ExcludeFromCodeCoverage]
   public class Startup
   {
     public Startup(IConfiguration configuration)
@@ -20,6 +28,11 @@ namespace Services.Voucher
     public void ConfigureServices(IServiceCollection services)
     {
       const string serviceName = "Voucher API";
+
+      services.AddSingleton<IVoucherRepository>(
+        new VoucherRepository(
+          JsonConvert.DeserializeObject<List<VoucherModel>>(
+            File.ReadAllText($"{AppDomain.CurrentDomain.BaseDirectory}data.json"))));
 
       services.AddControllers();
       services.AddSwaggerGen(c => { c.SwaggerDoc("1.0", new OpenApiInfo { Title = serviceName, Version = "1.0" }); });

@@ -1,5 +1,9 @@
 using System;
+using AutoFixture;
+using NSubstitute;
 using Services.Voucher.Controllers;
+using Services.Voucher.Models;
+using Services.Voucher.Repository;
 using Xunit;
 
 namespace Services.Voucher.Test.Performance.Controllers
@@ -10,7 +14,11 @@ namespace Services.Voucher.Test.Performance.Controllers
 
     public VoucherControllerTests()
     {
-      _controller = new VoucherController();
+      var fixture = new Fixture();
+      fixture.Customize<VoucherModel>(it => it.WithAutoProperties().With(o => o.ProductCodes, "P007D"));
+      var repository = Substitute.For<IVoucherRepository>();
+      repository.GetVouchers().Returns(fixture.CreateMany<VoucherModel>(1000));
+      _controller = new VoucherController(repository);
     }
 
     [Fact]

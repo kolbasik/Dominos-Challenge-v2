@@ -1,24 +1,20 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.IO;
-using Newtonsoft.Json;
 using Services.Voucher.Models;
 
 namespace Services.Voucher.Repository
 {
-  public class VoucherRepository
+  public class VoucherRepository : IVoucherRepository
   {
-    private IEnumerable<VoucherModel> _vouchers;
-    internal string DataFilename = $"{AppDomain.CurrentDomain.BaseDirectory}data.json";
+    private readonly IEnumerable<VoucherModel> _vouchers;
+
+    public VoucherRepository(IEnumerable<VoucherModel> vouchers)
+    {
+      _vouchers = vouchers ?? throw new ArgumentNullException(nameof(vouchers));
+    }
 
     public IEnumerable<VoucherModel> GetVouchers()
     {
-      if (_vouchers == null)
-      {
-        var text = File.ReadAllText(DataFilename);
-        _vouchers = JsonConvert.DeserializeObject<IEnumerable<VoucherModel>>(text);
-      }
-
       return _vouchers;
     }
   }
