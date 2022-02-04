@@ -94,7 +94,7 @@ namespace Services.Voucher.Test.Unit.Repository
       var expected = _vouchers.ElementAt(49);
 
       // Act
-      var actual = _repository.GetVouchersByNameSearch(expected.Name.Substring(3, 5), 5, 0);
+      var actual = _repository.GetVouchersByNameSearch(expected.Name.Substring(3, 15), 15);
 
       // Assert
       Assert.Contains(expected, actual);
@@ -104,10 +104,10 @@ namespace Services.Voucher.Test.Unit.Repository
     public void GetVouchersByNameSearch_ShouldReturnEmptyResult_IfNotFound()
     {
       // Arrange
-      const string notExistingName = "--123--";
+      const string notExistingName = "zzzzzzzzzzzzzzzz";
 
       // Act
-      var actual = _repository.GetVouchersByNameSearch(notExistingName, 5, 0);
+      var actual = _repository.GetVouchersByNameSearch(notExistingName, 5);
 
       // Assert
       Assert.Empty(actual);
@@ -128,7 +128,7 @@ namespace Services.Voucher.Test.Unit.Repository
     }
 
     [Fact]
-    public void GetVouchersByNameSearch_ShouldReturnNull_IfNotFound()
+    public void GetCheapestVoucherByProductCode_ShouldReturnNull_IfNotFound()
     {
       // Arrange
       const string notExistingProductCode = "--123--";

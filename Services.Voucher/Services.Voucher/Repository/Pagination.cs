@@ -11,9 +11,19 @@ namespace Services.Voucher.Repository
     public const int MinValue = 1;
     public const int MaxValue = 100;
 
+    public static int NormalizeOffset(int offset)
+    {
+      return Math.Max(0, offset);
+    }
+
+    public static int NormalizeLimit(int count)
+    {
+      return Math.Max(MinValue, Math.Min(count, MaxValue));
+    }
+
     public static IEnumerable<VoucherModel> Paginate(this IEnumerable<VoucherModel> source, int count, int offset)
     {
-      return source.Skip(Math.Max(0, offset)).Take(Math.Max(MinValue, Math.Min(count, MaxValue)));
+      return source.Skip(NormalizeOffset(offset)).Take(NormalizeLimit(count));
     }
   }
 }

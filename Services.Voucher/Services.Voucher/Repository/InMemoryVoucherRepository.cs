@@ -11,23 +11,21 @@ namespace Services.Voucher.Repository
     private readonly Dictionary<Guid, VoucherModel> _indexVoucherById;
     private readonly Dictionary<string, List<VoucherModel>> _indexVouchersByName;
     private readonly Dictionary<string, VoucherModel> _indexCheapestVoucherByProductCode;
+    private readonly InMemoryLuceneVoucherSearch _luceneIdsByName;
 
     public InMemoryVoucherRepository(List<VoucherModel> vouchers)
     {
       _vouchers = vouchers ?? throw new ArgumentNullException(nameof(vouchers));
       _indexVoucherById = _vouchers.ToDictionary(it => it.Id);
-      _indexVouchersByName = _vouchers.GroupBy(it => it.Name.Trim()).ToDictionary(it => it.Key, it => it.ToList(), StringComparer.OrdinalIgnoreCase);
+      _indexVouchersByName = _vouchers.GroupBy(it => it.Name.Trim())
+        .ToDictionary(it => it.Key, it => it.ToList(), StringComparer.OrdinalIgnoreCase);
       _indexCheapestVoucherByProductCode = new Dictionary<string, VoucherModel>(StringComparer.Ordinal);
       foreach (var voucher in vouchers)
-      {
-        foreach (var productCode in voucher.ProductCodes.Split(",").Select(it => it.Trim()))
-        {
-          if (!_indexCheapestVoucherByProductCode.TryGetValue(productCode, out var cheapestVoucher) || cheapestVoucher.Price > voucher.Price)
-          {
-            _indexCheapestVoucherByProductCode[productCode] = voucher;
-          }
-        }
-      }
+      foreach (var productCode in voucher.ProductCodes.Split(",").Select(it => it.Trim()))
+        if (!_indexCheapestVoucherByProductCode.TryGetValue(productCode, out var cheapestVoucher) ||
+            cheapestVoucher.Price > voucher.Price)
+          _indexCheapestVoucherByProductCode[productCode] = voucher;
+      _luceneIdsByName = new InMemoryLuceneVoucherSearch(vouchers);
     }
 
     public IEnumerable<VoucherModel> GetVouchers(int count, int offset)
@@ -42,13 +40,15 @@ namespace Services.Voucher.Repository
 
     public IEnumerable<VoucherModel> GetVouchersByName(string name, int count, int offset)
     {
-      return _indexVouchersByName.TryGetValue(name.Trim(), out var vouchers) ? vouchers.Paginate(count, offset) : Enumerable.Empty<VoucherModel>();
+      return _indexVouchersByName.TryGetValue(name.Trim(), out var vouchers)
+        ? vouchers.Paginate(count, offset)
+        : Enumerable.Empty<VoucherModel>();
     }
 
-    public IEnumerable<VoucherModel> GetVouchersByNameSearch(string search, int count, int offset)
+    public IEnumerable<VoucherModel> GetVouchersByNameSearch(string search, int count)
     {
-      var vouchers = _vouchers.Where(it => it.Name.Contains(search, StringComparison.OrdinalIgnoreCase));
-      return vouchers.Paginate(count, offset);
+      count = Pagination.NormalizeLimit(count);
+      return _luceneIdsByName.Search(search, count).Select(GetVoucherById);
     }
 
     public VoucherModel GetCheapestVoucherByProductCode(string productCode)
