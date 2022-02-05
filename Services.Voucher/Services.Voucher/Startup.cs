@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Services.Voucher.Models;
 using Services.Voucher.Repository;
 
@@ -28,6 +30,19 @@ namespace Services.Voucher
     public void ConfigureServices(IServiceCollection services)
     {
       const string serviceName = "Voucher API";
+
+      services.AddLogging();
+      services.AddOpenTelemetryTracing(builder =>
+        builder
+          .AddSource(serviceName)
+          .AddHttpClientInstrumentation()
+          .AddAspNetCoreInstrumentation()
+          .AddConsoleExporter()
+          .SetResourceBuilder(
+            ResourceBuilder.CreateDefault()
+              .AddEnvironmentVariableDetector()
+              .AddService(serviceName: serviceName, serviceVersion: typeof(Startup).Assembly.GetName().Version?.ToString()))
+      );
 
       services.AddSingleton<IVoucherRepository>(
         new InMemoryVoucherRepository(
