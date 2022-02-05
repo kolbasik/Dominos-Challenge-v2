@@ -4,6 +4,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -15,7 +17,7 @@ using Services.Voucher.Authorization;
 using Services.Voucher.Authorization.Swagger;
 using Services.Voucher.Models;
 using Services.Voucher.Repository;
-using Swashbuckle.AspNetCore.SwaggerGen;
+using Services.Voucher.Versioning.Swagger;
 
 namespace Services.Voucher
 {
@@ -71,9 +73,16 @@ namespace Services.Voucher
           JsonConvert.DeserializeObject<List<VoucherModel>>(
             File.ReadAllText($"{AppDomain.CurrentDomain.BaseDirectory}data.json"))));
 
+      services.AddApiVersioning(options =>
+      {
+        options.ReportApiVersions = true;
+        options.DefaultApiVersion = ApiVersion.Default;
+        options.ApiVersionReader = new UrlSegmentApiVersionReader();
+      });
       services.AddControllers();
       services.AddSwaggerGen(c =>
       {
+        c.DocumentFilter<VersioningOperationFilter>();
         c.OperationFilter<ApiKeyOperationFilter>();
         var securityScheme = new OpenApiSecurityScheme
         {

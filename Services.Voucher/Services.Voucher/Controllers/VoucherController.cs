@@ -10,8 +10,9 @@ using Services.Voucher.Utils;
 
 namespace Services.Voucher.Controllers
 {
-  [ApiController, Authorize(AuthenticationSchemes = ApiKeys.SchemeName, Policy = "VOUCHER:READ")]
-  [Route("[controller]")]
+  [ApiController, ApiVersion("1.0")]
+  [Route("api/{version:apiVersion}/[controller]")]
+  [Authorize(AuthenticationSchemes = ApiKeys.SchemeName, Policy = "VOUCHER:READ")]
   public class VoucherController : ControllerBase
   {
     private IVoucherRepository VoucherRepository { get; }
