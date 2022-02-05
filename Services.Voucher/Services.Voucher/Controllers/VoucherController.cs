@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Services.Voucher.Models;
 using Services.Voucher.Repository;
+using Services.Voucher.Utils;
 
 namespace Services.Voucher.Controllers
 {
@@ -15,7 +16,7 @@ namespace Services.Voucher.Controllers
 
     public VoucherController(IVoucherRepository voucherRepository)
     {
-      VoucherRepository = voucherRepository ?? throw new ArgumentNullException(nameof(voucherRepository));
+      VoucherRepository = Ensure.NotNull(voucherRepository, nameof(voucherRepository));
     }
 
     [HttpGet]

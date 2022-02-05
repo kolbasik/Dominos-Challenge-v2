@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Services.Voucher.Models;
+using Services.Voucher.Utils;
 
 namespace Services.Voucher.Repository
 {
@@ -15,7 +16,7 @@ namespace Services.Voucher.Repository
 
     public InMemoryVoucherRepository(List<VoucherModel> vouchers)
     {
-      _vouchers = vouchers ?? throw new ArgumentNullException(nameof(vouchers));
+      _vouchers = Ensure.NotNull(vouchers, nameof(vouchers));
       _indexVoucherById = _vouchers.ToDictionary(it => it.Id);
       _indexVouchersByName = _vouchers.GroupBy(it => it.Name.Trim())
         .ToDictionary(it => it.Key, it => it.ToList(), StringComparer.OrdinalIgnoreCase);
