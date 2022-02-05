@@ -30,7 +30,7 @@ namespace Services.Voucher
       const string serviceName = "Voucher API";
 
       services.AddSingleton<IVoucherRepository>(
-        new VoucherRepository(
+        new InMemoryVoucherRepository(
           JsonConvert.DeserializeObject<List<VoucherModel>>(
             File.ReadAllText($"{AppDomain.CurrentDomain.BaseDirectory}data.json"))));
 

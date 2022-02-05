@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Services.Voucher.Models;
 using Services.Voucher.Repository;
@@ -13,48 +13,52 @@ namespace Services.Voucher.Controllers
   {
     private IVoucherRepository VoucherRepository { get; }
 
-    public VoucherController(IVoucherRepository repository)
+    public VoucherController(IVoucherRepository voucherRepository)
     {
-      VoucherRepository = repository ?? throw new ArgumentNullException(nameof(repository));
+      VoucherRepository = voucherRepository ?? throw new ArgumentNullException(nameof(voucherRepository));
     }
 
     [HttpGet]
     [Route("[action]")]
-    public IEnumerable<VoucherModel> Get([FromQuery] int count = int.MaxValue)
+    public IEnumerable<VoucherModel> Get(
+      [FromQuery, Range(Pagination.MinValue, Pagination.MaxValue)] int count = Pagination.DefaultValue,
+      [FromQuery, Range(0, int.MaxValue)] int offset = 0)
     {
-      return VoucherRepository.GetVouchers().Take(Math.Max(1, count));
+      return VoucherRepository.GetVouchers(count, offset);
     }
 
     [HttpGet]
     [Route("[action]")]
-    public VoucherModel GetVoucherById([FromQuery] Guid id)
+    public VoucherModel GetVoucherById([FromQuery, Required] Guid id)
     {
-      return VoucherRepository.GetVouchers().FirstOrDefault(it => it.Id == id);
+      return VoucherRepository.GetVoucherById(id);
     }
 
     [HttpGet]
     [Route("[action]")]
-    public IEnumerable<VoucherModel> GetVouchersByName([FromQuery] string name)
+    public IEnumerable<VoucherModel> GetVouchersByName(
+      [FromQuery, Required] string name,
+      [FromQuery, Range(Pagination.MinValue, Pagination.MaxValue)] int count = Pagination.DefaultValue,
+      [FromQuery, Range(0, int.MaxValue)] int offset = 0)
     {
-      return VoucherRepository.GetVouchers().Where(it => string.Equals(it.Name, name, StringComparison.OrdinalIgnoreCase));
+      return VoucherRepository.GetVouchersByName(name, count, offset);
     }
 
     [HttpGet]
     [Route("[action]")]
-    public IEnumerable<VoucherModel> GetVouchersByNameSearch([FromQuery] string search)
+    public IEnumerable<VoucherModel> GetVouchersByNameSearch(
+      [FromQuery, Required] string search,
+      [FromQuery, Range(Pagination.MinValue, Pagination.MaxValue)] int count = Pagination.DefaultValue,
+      [FromQuery, Range(0, int.MaxValue)] int skip = 0)
     {
-      return VoucherRepository.GetVouchers().Where(it => it.Name.Contains(search, StringComparison.OrdinalIgnoreCase));
+      return VoucherRepository.GetVouchersByNameSearch(search, count, skip);
     }
 
     [HttpGet]
     [Route("[action]")]
-    public VoucherModel GetCheapestVoucherByProductCode([FromQuery] string productCode)
+    public VoucherModel GetCheapestVoucherByProductCode([FromQuery, Required] string productCode)
     {
-      var vouchers = VoucherRepository.GetVouchers()
-        .Where(voucher =>
-          voucher.ProductCodes.Split(",")
-            .Any(code => string.Equals(code, productCode, StringComparison.OrdinalIgnoreCase)));
-      return vouchers.OrderBy(it => it.Price).FirstOrDefault();
+      return VoucherRepository.GetCheapestVoucherByProductCode(productCode);
     }
   }
 }

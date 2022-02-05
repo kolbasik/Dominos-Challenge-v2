@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using AutoFixture;
 using NSubstitute;
 using Services.Voucher.Controllers;
@@ -27,104 +24,86 @@ namespace Services.Voucher.Test.Unit.Controllers
     public void Get_ShouldReturnAllVouchers_WhenNoCountIsProvided()
     {
       // Arrange
-      var vouchers = _fixture.CreateMany<VoucherModel>(1000);
-      _repository.GetVouchers().Returns(vouchers);
+      var expected = _fixture.CreateMany<VoucherModel>(1000);
+      _repository.GetVouchers(25, 0).Returns(expected);
 
       // Act
-      var result = _controller.Get();
+      var actual = _controller.Get();
 
       // Assert
-      Assert.Equal(vouchers.Count(), result.Count());
+      Assert.Equal(expected, actual);
     }
 
     [Fact]
     public void Get_ShouldReturnTheRequestedAmountOfVouchers_WhenACountIsProvided()
     {
       // Arrange
-      var count = 5;
-      var vouchers = _fixture.CreateMany<VoucherModel>(1000);
-      _repository.GetVouchers().Returns(vouchers);
+      const int offset = 3;
+      const int limit = 5;
+      var expected = _fixture.CreateMany<VoucherModel>(1000);
+      _repository.GetVouchers(limit, offset).Returns(expected);
 
       // Act
-      var result = _controller.Get(count);
+      var actual = _controller.Get(limit, offset);
 
       // Assert
-      Assert.Equal(count, result.Count());
+      Assert.Equal(expected, actual);
     }
 
     [Fact]
     public void GetVoucherById_StateUnderTest_ExpectedBehavior()
     {
       // Arrange
-      var vouchers = _fixture.CreateMany<VoucherModel>(5);
-      _repository.GetVouchers().Returns(vouchers);
-      var expected = vouchers.ElementAt(2);
+      var expected = _fixture.Create<VoucherModel>();
+      _repository.GetVoucherById(expected.Id).Returns(expected);
 
       // Act
       var result = _controller.GetVoucherById(expected.Id);
 
       // Assert
-      Assert.Equal(result, expected);
+      Assert.Equal(expected, result);
     }
 
     [Fact]
     public void GetVouchersByName_ShouldReturnAllVouchersWithTheGivenSearchString_WhenVoucherExists()
     {
       // Arrange
-      var vouchers = new List<VoucherModel>
-      {
-        new VoucherModel { Id = Guid.NewGuid(), Name = "A" },
-        new VoucherModel { Id =  Guid.NewGuid(), Name =  "B" },
-        new VoucherModel { Id =  Guid.NewGuid(), Name =  "A" }
-      };
-      _repository.GetVouchers().Returns(vouchers);
+      var expected = _fixture.CreateMany<VoucherModel>(5);
+      _repository.GetVouchersByName("BC", 25, 0).Returns(expected);
 
       // Act
-      var result = _controller.GetVouchersByName("A");
+      var actual = _controller.GetVouchersByName("BC");
 
       // Assert
-      Assert.Equal(result, new List<VoucherModel> { vouchers.ElementAt(0), vouchers.ElementAt(2) });
+      Assert.Equal(expected, actual);
     }
 
     [Fact]
     public void GetVouchersByNameSearch_ShouldReturnAllVouchersThatContainTheGivenSearchString_WhenVoucherExists()
     {
       // Arrange
-      var vouchers = new List<VoucherModel>
-      {
-        new VoucherModel { Id =  Guid.NewGuid(), Name =  "ABC" },
-        new VoucherModel { Id =  Guid.NewGuid(), Name =  "ABCD" },
-        new VoucherModel { Id =  Guid.NewGuid(), Name =  "ACD" }
-      };
-      _repository.GetVouchers().Returns(vouchers);
+      var expected = _fixture.CreateMany<VoucherModel>(5);
+      _repository.GetVouchersByNameSearch("BC", 25).Returns(expected);
 
       // Act
-      var result = _controller.GetVouchersByNameSearch("BC");
+      var actual = _controller.GetVouchersByNameSearch("BC");
 
       // Assert
-      Assert.Equal(result, new List<VoucherModel> { vouchers.ElementAt(0), vouchers.ElementAt(1) });
+      Assert.Equal(expected, actual);
     }
 
     [Fact]
     public void GetCheapestVoucherByProductCode_StateUnderTest_ExpectedBehavior()
     {
       // Arrange
-      var vouchers = new List<VoucherModel>
-      {
-        new VoucherModel { Id =  Guid.NewGuid(), ProductCodes = "QWE", Price = 789 },
-        new VoucherModel { Id =  Guid.NewGuid(), ProductCodes = "QWE", Price = 123 },
-        new VoucherModel { Id =  Guid.NewGuid(), ProductCodes = "QWE", Price = 456 }
-      };
-      _repository.GetVouchers().Returns(vouchers);
-      var expected = vouchers.ElementAt(1);
+      var expected = _fixture.Create<VoucherModel>();
+      _repository.GetCheapestVoucherByProductCode("BC").Returns(expected);
 
       // Act
-      var result = _controller.GetCheapestVoucherByProductCode("QWE");
+      var actual = _controller.GetCheapestVoucherByProductCode("BC");
 
       // Assert
-      Assert.Equal(result, expected);
+      Assert.Equal(expected, actual);
     }
-
-    // TODO: This is not all the tests that we would like to see + the above tests can be made much smarter.
   }
 }
