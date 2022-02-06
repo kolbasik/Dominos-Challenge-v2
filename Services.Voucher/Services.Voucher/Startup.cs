@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
@@ -16,6 +17,7 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Services.Voucher.Authorization;
 using Services.Voucher.Authorization.Swagger;
+using Services.Voucher.HealthChecks;
 using Services.Voucher.Models;
 using Services.Voucher.Repository;
 using Services.Voucher.Versioning.Swagger;
@@ -71,6 +73,8 @@ namespace Services.Voucher
         c.AddScheme<ApiKeyAuthenticationHandler>(ApiKeys.SchemeName, ApiKeys.SchemeName);
       });
       services.AddAuthorization(c => c.AddPolicy("VOUCHER:READ", p => p.RequireRole("VOUCHER:READ")));
+
+      services.AddHealthChecks().AddStartupCheck();
 
       var vouchers = JsonConvert.DeserializeObject<List<VoucherModel>>(
         File.ReadAllText($"{AppDomain.CurrentDomain.BaseDirectory}data.json"));
@@ -132,6 +136,14 @@ namespace Services.Voucher
 
       app.UseEndpoints(endpoints =>
       {
+        endpoints.MapHealthChecks("/healthz/ready", new HealthCheckOptions
+        {
+          Predicate = healthCheck => healthCheck.Tags.Contains("ready")
+        });
+        endpoints.MapHealthChecks("/healthz/live", new HealthCheckOptions
+        {
+          Predicate = _ => false
+        });
         endpoints.MapSwagger();
         endpoints.MapControllers();
       });
