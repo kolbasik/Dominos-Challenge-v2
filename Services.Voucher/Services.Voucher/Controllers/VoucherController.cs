@@ -21,53 +21,41 @@ namespace Services.Voucher.Controllers
 
     [HttpGet]
     [Route("[action]")]
-    public IEnumerable<VoucherModel> Get(int count = 0)
+    public IEnumerable<VoucherModel> Get([FromQuery] int skip = 0, [FromQuery] int count = 50)
     {
-      var vouchers = Repository.GetVouchers();
-      if (count == 0) count = vouchers.Count();
-      var returnVouchers = new List<VoucherModel>();
-      for (var i = 0; i < count; i++) returnVouchers.Add(vouchers.ElementAt(i));
-      return returnVouchers;
+      return Repository.GetVouchers().Skip(skip).Take(Math.Min(count, 100));
     }
 
     [HttpGet]
     [Route("[action]")]
-    public VoucherModel GetVoucherById(Guid id)
+    public VoucherModel GetVoucherById([FromQuery] Guid id)
     {
-      var vouchers = Repository.GetVouchers();
-      VoucherModel voucher = null;
-      for (var i = 0; i < vouchers.Count(); i++)
-        if (vouchers.ElementAt(i).Id == id)
-          voucher = vouchers.ElementAt(i);
-
-      return voucher;
+      return Repository.GetVouchers().FirstOrDefault(it => it.Id == id);
     }
 
     [HttpGet]
     [Route("[action]")]
-    public IEnumerable<VoucherModel> GetVouchersByName(string name)
+    public IEnumerable<VoucherModel> GetVouchersByName([FromQuery] string name)
     {
-      var vouchers = Repository.GetVouchers();
-      var returnVouchers = new List<VoucherModel>();
-      for (var i = 0; i < vouchers.Count(); i++)
-        if (vouchers.ElementAt(i).Name == name)
-          returnVouchers.Add(vouchers.ElementAt(i));
-
-      return returnVouchers.ToArray();
+      return Repository.GetVouchers().Where(it => string.Equals(it.Name, name, StringComparison.OrdinalIgnoreCase));
     }
 
     [HttpGet]
     [Route("[action]")]
-    public IEnumerable<VoucherModel> GetVouchersByNameSearch(string search)
+    public IEnumerable<VoucherModel> GetVouchersByNameSearch([FromQuery] string search)
     {
-      throw new NotImplementedException();
+      return Repository.GetVouchers().Where(it => it.Name.Contains(search, StringComparison.OrdinalIgnoreCase));
     }
 
     [HttpGet]
     [Route("[action]")]
-    public VoucherModel GetCheapestVoucherByProductCode(string productCode)
+    public VoucherModel GetCheapestVoucherByProductCode([FromQuery] string productCode)
     {
-      throw new NotImplementedException();
+      var vouchers = Repository.GetVouchers()
+        .Where(voucher =>
+          voucher.ProductCodes.Split(",")
+            .Any(code => string.Equals(code, productCode, StringComparison.OrdinalIgnoreCase)));
+      return vouchers.OrderBy(it => it.Price).FirstOrDefault();
     }
   }
 }
