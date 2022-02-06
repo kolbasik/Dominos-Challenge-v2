@@ -12,8 +12,6 @@ namespace Services.Voucher.Repository
 
     public IEnumerable<VoucherModel> GetVouchersByName(string name, int count, int offset);
 
-    public IEnumerable<VoucherModel> GetVouchersByNameSearch(string search, int count);
-
     public VoucherModel GetCheapestVoucherByProductCode(string productCode);
   }
 }

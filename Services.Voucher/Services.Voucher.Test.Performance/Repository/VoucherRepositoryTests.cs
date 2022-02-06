@@ -51,15 +51,6 @@ namespace Services.Voucher.Test.Performance.Repository
     }
 
     [Fact]
-    public void GetVouchersByNameSearch_ShouldBePerformant()
-    {
-      var expected = _repository.GetVouchers(450, 1).First();
-      var time = Stopwatch.StartNew();
-      for (var i = 0; i < 1000; i++) _repository.GetVouchersByNameSearch(expected.Name.Substring(2, 5), 50);
-      Assert.InRange(time.Elapsed.TotalMilliseconds, 0, 500);
-    }
-
-    [Fact]
     public void GetCheapestVoucherByProductCode_ShouldBePerformant()
     {
       var expected = _repository.GetVouchers(450, 1).First();

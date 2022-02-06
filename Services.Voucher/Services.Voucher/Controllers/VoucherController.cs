@@ -16,10 +16,12 @@ namespace Services.Voucher.Controllers
   public class VoucherController : ControllerBase
   {
     private IVoucherRepository VoucherRepository { get; }
+    private IVoucherSearch VoucherSearch { get; }
 
-    public VoucherController(IVoucherRepository voucherRepository)
+    public VoucherController(IVoucherRepository voucherRepository, IVoucherSearch voucherSearch)
     {
       VoucherRepository = Ensure.NotNull(voucherRepository, nameof(voucherRepository));
+      VoucherSearch = Ensure.NotNull(voucherSearch, nameof(voucherSearch));
     }
 
     [HttpGet]
@@ -57,7 +59,7 @@ namespace Services.Voucher.Controllers
       [FromQuery] [Range(Pagination.MinValue, Pagination.MaxValue)]
       int count = Pagination.DefaultValue)
     {
-      return VoucherRepository.GetVouchersByNameSearch(search, count);
+      return VoucherSearch.Search(search, Pagination.NormalizeLimit(count));
     }
 
     [HttpGet]

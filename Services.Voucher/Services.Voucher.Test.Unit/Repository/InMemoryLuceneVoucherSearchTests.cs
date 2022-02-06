@@ -31,7 +31,7 @@ namespace Services.Voucher.Test.Unit.Repository
 
       // Assert
       Assert.InRange(actual.Count(), patterns.Length, patterns.Length);
-      Assert.Equal(new[] { _voucher.Id }, actual.Distinct());
+      Assert.Equal(new[] { _voucher }, actual.Distinct());
     }
   }
 }

@@ -1,11 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using AutoFixture;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
-using BenchmarkDotNet.Running;
 using Services.Voucher.Models;
 using Services.Voucher.Repository;
 
@@ -14,8 +12,9 @@ namespace Services.Voucher.Test.Performance.Benchmarks
   [SimpleJob(RuntimeMoniker.Net50, baseline: true)]
   [SimpleJob(RuntimeMoniker.Net60)]
   [RPlotExporter]
+  [MemoryDiagnoser]
   [ExcludeFromCodeCoverage]
-  public class InMemoryVouchersBenchmark
+  public class InMemoryVouchersRepositoryBenchmark
   {
     [Params(100, 1000, 10000)] public int N;
 
@@ -58,22 +57,6 @@ namespace Services.Voucher.Test.Performance.Benchmarks
     public VoucherModel GetCheapestVoucherByProductCode()
     {
       return repository.GetCheapestVoucherByProductCode("AAA");
-    }
-
-    [Benchmark]
-    public List<VoucherModel> GetVouchersByNameSearch()
-    {
-      return repository.GetVouchersByNameSearch("Lorem adipiscing", 25).ToList();
-    }
-  }
-
-  [ExcludeFromCodeCoverage]
-  public sealed class Program
-  {
-    public static void Main(string[] args)
-    {
-      BenchmarkRunner.Run<InMemoryVouchersBenchmark>();
-      Console.ReadKey(true);
     }
   }
 }

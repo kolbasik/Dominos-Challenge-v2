@@ -12,7 +12,6 @@ namespace Services.Voucher.Repository
     private readonly Dictionary<Guid, VoucherModel> _indexVoucherById;
     private readonly Dictionary<string, List<VoucherModel>> _indexVouchersByName;
     private readonly Dictionary<string, VoucherModel> _indexCheapestVoucherByProductCode;
-    private readonly InMemoryLuceneVoucherSearch _luceneIdsByName;
 
     public InMemoryVoucherRepository(List<VoucherModel> vouchers)
     {
@@ -26,7 +25,6 @@ namespace Services.Voucher.Repository
         if (!_indexCheapestVoucherByProductCode.TryGetValue(productCode, out var cheapestVoucher) ||
             cheapestVoucher.Price > voucher.Price)
           _indexCheapestVoucherByProductCode[productCode] = voucher;
-      _luceneIdsByName = new InMemoryLuceneVoucherSearch(vouchers);
     }
 
     public IEnumerable<VoucherModel> GetVouchers(int count, int offset)
@@ -44,12 +42,6 @@ namespace Services.Voucher.Repository
       return _indexVouchersByName.TryGetValue(name.Trim(), out var vouchers)
         ? vouchers.Paginate(count, offset)
         : Enumerable.Empty<VoucherModel>();
-    }
-
-    public IEnumerable<VoucherModel> GetVouchersByNameSearch(string search, int count)
-    {
-      count = Pagination.NormalizeLimit(count);
-      return _luceneIdsByName.Search(search, count).Select(GetVoucherById);
     }
 
     public VoucherModel GetCheapestVoucherByProductCode(string productCode)

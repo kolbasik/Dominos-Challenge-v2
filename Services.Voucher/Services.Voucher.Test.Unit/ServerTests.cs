@@ -51,7 +51,7 @@ namespace Services.Voucher.Test.Unit
 
       var expectedWords = new [] { "Chicken", "Garlic", "Pizzas" };
       var vouchersBySearch = await httpClient.GetFromJsonAsync<VoucherModel[]>($"/api/1.0/Voucher/GetVouchersByNameSearch?search={HttpUtility.UrlEncode(string.Join(" ", expectedWords))}");
-      Assert.All(vouchersBySearch, it => Assert.All(expectedWords, word => Assert.Contains(word, it.Name)));
+      Assert.All(vouchersBySearch, it => Assert.True(expectedWords.Any(word => it.Name.Contains(word))));
     }
 
 

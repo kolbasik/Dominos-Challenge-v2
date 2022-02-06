@@ -13,17 +13,20 @@ using Services.Voucher.Models;
 
 namespace Services.Voucher.Repository
 {
-  public sealed class InMemoryLuceneVoucherSearch
+  public sealed class InMemoryLuceneVoucherSearch : IVoucherSearch
   {
+    private const LuceneVersion Version = LuceneVersion.LUCENE_48;
+
+    private readonly Analyzer _analyzer;
     private readonly IndexSearcher _lucene;
-    private readonly QueryParser _nameParser;
+    private readonly Dictionary<Guid, VoucherModel> _entities;
 
     public InMemoryLuceneVoucherSearch(List<VoucherModel> vouchers)
     {
-      const LuceneVersion version = LuceneVersion.LUCENE_48;
-      Analyzer analyzer = new StandardAnalyzer(version);
+      _entities = vouchers.ToDictionary(it => it.Id);
+      _analyzer = new StandardAnalyzer(Version);
       Directory directory = new RAMDirectory();
-      using (var writer = new IndexWriter(directory, new IndexWriterConfig(version, analyzer)))
+      using (var writer = new IndexWriter(directory, new IndexWriterConfig(Version, _analyzer)))
       {
         var storedField = new FieldType { IsStored = true };
         foreach (var voucher in vouchers)
@@ -40,14 +43,15 @@ namespace Services.Voucher.Repository
       }
 
       _lucene = new IndexSearcher(DirectoryReader.Open(directory));
-      _nameParser = new QueryParser(version, "name", analyzer);
+
     }
 
-    public IEnumerable<Guid> Search(string pattern, int count)
+    public IEnumerable<VoucherModel> Search(string pattern, int count)
     {
-      var query = _nameParser.Parse(QueryParserBase.Escape(pattern));
+      var parser = new QueryParser(Version, "name", _analyzer);
+      var query = parser.Parse(QueryParserBase.Escape(pattern));
       var hits = _lucene.Search(query, null, count).ScoreDocs;
-      return hits.Select(hit => new Guid(_lucene.Doc(hit.Doc).GetBinaryValue("id").Bytes));
+      return hits.Select(hit => _entities[new Guid(_lucene.Doc(hit.Doc).GetBinaryValue("id").Bytes)]);
     }
   }
 }

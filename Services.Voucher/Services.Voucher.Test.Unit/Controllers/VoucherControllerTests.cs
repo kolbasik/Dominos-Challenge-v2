@@ -11,13 +11,15 @@ namespace Services.Voucher.Test.Unit.Controllers
   {
     private readonly Fixture _fixture;
     private readonly IVoucherRepository _repository;
+    private readonly IVoucherSearch _search;
     private readonly VoucherController _controller;
 
     public VoucherControllerTests()
     {
       _fixture = new Fixture();
       _repository = Substitute.For<IVoucherRepository>();
-      _controller = new VoucherController(_repository);
+      _search = Substitute.For<IVoucherSearch>();
+      _controller = new VoucherController(_repository, _search);
     }
 
     [Fact]
@@ -83,7 +85,7 @@ namespace Services.Voucher.Test.Unit.Controllers
     {
       // Arrange
       var expected = _fixture.CreateMany<VoucherModel>(5);
-      _repository.GetVouchersByNameSearch("BC", 25).Returns(expected);
+      _search.Search("BC", 25).Returns(expected);
 
       // Act
       var actual = _controller.GetVouchersByNameSearch("BC");

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Microsoft.AspNetCore.Builder;
@@ -40,16 +41,19 @@ namespace Services.Voucher
 
       services.AddLogging();
       services.AddOpenTelemetryTracing(builder =>
+      {
         builder
           .AddSource(serviceName)
           .AddHttpClientInstrumentation()
           .AddAspNetCoreInstrumentation()
-          .AddConsoleExporter()
           .SetResourceBuilder(
             ResourceBuilder.CreateDefault()
               .AddEnvironmentVariableDetector()
-              .AddService(serviceName: serviceName, serviceVersion: typeof(Startup).Assembly.GetName().Version?.ToString()))
-      );
+              .AddService(serviceName: serviceName,
+                serviceVersion: typeof(Startup).Assembly.GetName().Version?.ToString()));
+        if (Env.IsDevelopment() && Debugger.IsAttached)
+          builder.AddConsoleExporter();
+      });
 
       services.AddCors(c =>
         c.AddDefaultPolicy(p => p.AllowAnyOrigin().WithMethods("GET").DisallowCredentials()));
@@ -68,10 +72,17 @@ namespace Services.Voucher
       });
       services.AddAuthorization(c => c.AddPolicy("VOUCHER:READ", p => p.RequireRole("VOUCHER:READ")));
 
-      services.AddSingleton<IVoucherRepository>(
-        new InMemoryVoucherRepository(
-          JsonConvert.DeserializeObject<List<VoucherModel>>(
-            File.ReadAllText($"{AppDomain.CurrentDomain.BaseDirectory}data.json"))));
+      var vouchers = JsonConvert.DeserializeObject<List<VoucherModel>>(
+        File.ReadAllText($"{AppDomain.CurrentDomain.BaseDirectory}data.json"));
+      if (string.Equals("Trigram", Configuration.GetValue<string>("VoucherSearchProvider")))
+      {
+        services.AddSingleton<IVoucherSearch>(new InMemoryTrigramVoucherSearch(vouchers));
+      }
+      else
+      {
+        services.AddSingleton<IVoucherSearch>(new InMemoryLuceneVoucherSearch(vouchers));
+      }
+      services.AddSingleton<IVoucherRepository>(new InMemoryVoucherRepository(vouchers));
 
       services.AddApiVersioning(options =>
       {
