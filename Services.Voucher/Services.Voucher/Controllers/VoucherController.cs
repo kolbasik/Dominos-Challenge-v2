@@ -1,14 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Services.Voucher.Authorization;
 using Services.Voucher.Models;
 using Services.Voucher.Repository;
 using Services.Voucher.Utils;
 
 namespace Services.Voucher.Controllers
 {
-  [ApiController]
+  [ApiController, Authorize(AuthenticationSchemes = ApiKeys.SchemeName, Policy = "VOUCHER:READ")]
   [Route("[controller]")]
   public class VoucherController : ControllerBase
   {
