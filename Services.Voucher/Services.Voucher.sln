@@ -11,12 +11,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services.Voucher.Test.Perfo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{30019DEB-DF47-4A3D-88AF-0FEDD278353E}"
 	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
 		..\.editorconfig = ..\.editorconfig
 		..\.gitattributes = ..\.gitattributes
 		..\.gitignore = ..\.gitignore
 		build.cake = build.cake
 		build.sh = build.sh
 		cake.config = cake.config
+		docker.sh = docker.sh
+		Dockerfile = Dockerfile
+		heroku.sh = heroku.sh
 		Instructions.md = Instructions.md
 	EndProjectSection
 EndProject

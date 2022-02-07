@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
@@ -15,7 +16,16 @@ namespace Services.Voucher
     private static IHostBuilder CreateHostBuilder(string[] args)
     {
       return Host.CreateDefaultBuilder(args)
-        .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+        .ConfigureWebHostDefaults(webBuilder =>
+        {
+          // Heroku requires to use PORT
+          var port = Environment.GetEnvironmentVariable("PORT");
+          if (!string.IsNullOrWhiteSpace(port))
+          {
+            webBuilder.UseUrls($"http://+:{port}");
+          }
+          webBuilder.UseStartup<Startup>();
+        });
     }
   }
 }
