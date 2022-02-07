@@ -4,7 +4,7 @@ using Services.Voucher.Contracts.Models;
 using Services.Voucher.Features.Vouchers;
 using Xunit;
 
-namespace Services.Voucher.Test.Unit.Repository
+namespace Services.Voucher.Test.Unit.Features.Vouchers
 {
   public class InMemoryLuceneVoucherSearchTests
   {

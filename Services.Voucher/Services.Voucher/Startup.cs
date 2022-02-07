@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
@@ -12,11 +10,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Newtonsoft.Json;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Services.Voucher.Contracts;
-using Services.Voucher.Contracts.Models;
 using Services.Voucher.Features.AspNet.Authorization;
 using Services.Voucher.Features.AspNet.Authorization.Swagger;
 using Services.Voucher.Features.AspNet.HealthChecks;
@@ -77,17 +73,8 @@ namespace Services.Voucher
 
       services.AddHealthChecks().AddStartupCheck();
 
-      var vouchers = JsonConvert.DeserializeObject<List<VoucherModel>>(
-        File.ReadAllText($"{AppDomain.CurrentDomain.BaseDirectory}data.json"));
-      if (string.Equals("Trigram", Configuration.GetValue<string>("VoucherSearchProvider")))
-      {
-        services.AddSingleton<IVoucherSearch>(new InMemoryTrigramVoucherSearch(vouchers));
-      }
-      else
-      {
-        services.AddSingleton<IVoucherSearch>(new InMemoryLuceneVoucherSearch(vouchers));
-      }
-      services.AddSingleton<IVoucherRepository>(new InMemoryVoucherRepository(vouchers));
+      services.AddSingleton<IVoucherProvider>(new JsonFileVoucherProvider());
+      services.AddInMemoryVouchers(c => c.SearchProvider = SearchProviders.Lucene);
 
       services.AddApiVersioning(options =>
       {
