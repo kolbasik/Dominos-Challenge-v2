@@ -4,8 +4,8 @@ using System.Linq;
 using AutoFixture;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
-using Services.Voucher.Models;
-using Services.Voucher.Repository;
+using Services.Voucher.Contracts.Models;
+using Services.Voucher.Features.Vouchers;
 
 namespace Services.Voucher.Test.Performance.Benchmarks
 {

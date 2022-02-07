@@ -15,12 +15,13 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using Services.Voucher.Authorization;
-using Services.Voucher.Authorization.Swagger;
-using Services.Voucher.HealthChecks;
-using Services.Voucher.Models;
-using Services.Voucher.Repository;
-using Services.Voucher.Versioning.Swagger;
+using Services.Voucher.Contracts;
+using Services.Voucher.Contracts.Models;
+using Services.Voucher.Features.AspNet.Authorization;
+using Services.Voucher.Features.AspNet.Authorization.Swagger;
+using Services.Voucher.Features.AspNet.HealthChecks;
+using Services.Voucher.Features.AspNet.Versioning.Swagger;
+using Services.Voucher.Features.Vouchers;
 
 namespace Services.Voucher
 {

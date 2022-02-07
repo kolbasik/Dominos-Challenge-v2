@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Services.Voucher.Authorization.Roles
+namespace Services.Voucher.Features.AspNet.Authorization.Roles
 {
   public sealed class InMemoryApiKeyRolesProvider : IApiKeyRolesProvider
   {

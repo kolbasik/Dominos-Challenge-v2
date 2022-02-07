@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Services.Voucher.Authorization.Swagger
+namespace Services.Voucher.Features.AspNet.Authorization.Swagger
 {
   [ExcludeFromCodeCoverage]
   public class ApiKeyOperationFilter : IOperationFilter

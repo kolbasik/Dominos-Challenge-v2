@@ -4,10 +4,9 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
-using Services.Voucher.Authorization.Roles;
-using Services.Voucher.Utils;
+using Services.Voucher.Features.AspNet.Authorization.Roles;
 
-namespace Services.Voucher.Authorization
+namespace Services.Voucher.Features.AspNet.Authorization
 {
   public sealed class ApiKeyAuthenticationHandler : IAuthenticationHandler
   {

@@ -1,4 +1,4 @@
-namespace Services.Voucher.Authorization.Roles
+namespace Services.Voucher.Features.AspNet.Authorization.Roles
 {
   public interface IApiKeyRolesProvider
   {

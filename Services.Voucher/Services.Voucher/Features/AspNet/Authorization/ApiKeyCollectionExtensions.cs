@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
-using Services.Voucher.Authorization.Roles;
+using Services.Voucher.Features.AspNet.Authorization.Roles;
 
-namespace Services.Voucher.Authorization
+namespace Services.Voucher.Features.AspNet.Authorization
 {
   [ExcludeFromCodeCoverage]
   public static class ApiKeyCollectionExtensions

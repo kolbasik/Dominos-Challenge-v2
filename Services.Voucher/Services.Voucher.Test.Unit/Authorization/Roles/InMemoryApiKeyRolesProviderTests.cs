@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using AutoFixture;
 using J2N.Collections.Generic;
-using Services.Voucher.Authorization.Roles;
+using Services.Voucher.Features.AspNet.Authorization.Roles;
 using Xunit;
 
 namespace Services.Voucher.Test.Unit.Authorization.Roles

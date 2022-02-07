@@ -1,6 +1,6 @@
 using System;
 
-namespace Services.Voucher.Models
+namespace Services.Voucher.Contracts.Models
 {
   public sealed record VoucherModel
   {

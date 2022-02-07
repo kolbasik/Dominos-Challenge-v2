@@ -2,8 +2,9 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using AutoFixture;
-using Services.Voucher.Models;
-using Services.Voucher.Repository;
+using Services.Voucher.Contracts;
+using Services.Voucher.Contracts.Models;
+using Services.Voucher.Features.Vouchers;
 using Xunit;
 
 namespace Services.Voucher.Test.Performance.Repository

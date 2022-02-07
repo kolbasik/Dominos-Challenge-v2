@@ -9,9 +9,10 @@ using Lucene.Net.QueryParsers.Classic;
 using Lucene.Net.Search;
 using Lucene.Net.Store;
 using Lucene.Net.Util;
-using Services.Voucher.Models;
+using Services.Voucher.Contracts;
+using Services.Voucher.Contracts.Models;
 
-namespace Services.Voucher.Repository
+namespace Services.Voucher.Features.Vouchers
 {
   public sealed class InMemoryLuceneVoucherSearch : IVoucherSearch
   {

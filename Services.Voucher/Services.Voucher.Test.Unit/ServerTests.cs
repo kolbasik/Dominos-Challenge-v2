@@ -7,8 +7,8 @@ using AutoFixture;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Hosting;
-using Services.Voucher.Authorization;
-using Services.Voucher.Models;
+using Services.Voucher.Contracts.Models;
+using Services.Voucher.Features.AspNet.Authorization;
 using Xunit;
 
 namespace Services.Voucher.Test.Unit

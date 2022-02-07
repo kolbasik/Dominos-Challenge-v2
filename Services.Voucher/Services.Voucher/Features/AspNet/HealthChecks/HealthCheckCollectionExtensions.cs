@@ -1,8 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
-using Services.Voucher.HealthChecks.Startup;
+using Services.Voucher.Features.AspNet.HealthChecks.Startup;
 
-namespace Services.Voucher.HealthChecks
+namespace Services.Voucher.Features.AspNet.HealthChecks
 {
   /// <summary>
   /// Register a startup health check to indicate that the application is running.

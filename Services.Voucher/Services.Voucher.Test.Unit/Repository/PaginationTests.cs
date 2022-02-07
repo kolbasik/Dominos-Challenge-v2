@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoFixture;
-using Services.Voucher.Models;
-using Services.Voucher.Repository;
+using Services.Voucher.Contracts.Models;
+using Services.Voucher.Features;
 using Xunit;
 
 namespace Services.Voucher.Test.Unit.Repository

@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
-namespace Services.Voucher.HealthChecks.Startup
+namespace Services.Voucher.Features.AspNet.HealthChecks.Startup
 {
   [ExcludeFromCodeCoverage]
   internal sealed class StartupHealthCheck : IHealthCheck

@@ -4,7 +4,7 @@ using System.Linq;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Services.Voucher.Versioning.Swagger
+namespace Services.Voucher.Features.AspNet.Versioning.Swagger
 {
   [ExcludeFromCodeCoverage]
   public class VersioningOperationFilter : IDocumentFilter

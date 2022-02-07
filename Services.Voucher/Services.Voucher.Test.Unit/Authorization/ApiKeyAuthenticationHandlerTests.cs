@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using NSubstitute;
-using Services.Voucher.Authorization;
-using Services.Voucher.Authorization.Roles;
+using Services.Voucher.Features.AspNet.Authorization;
+using Services.Voucher.Features.AspNet.Authorization.Roles;
 using Xunit;
 
 namespace Services.Voucher.Test.Unit.Authorization

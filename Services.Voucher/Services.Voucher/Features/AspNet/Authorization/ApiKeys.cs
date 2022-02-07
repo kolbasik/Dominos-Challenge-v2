@@ -1,4 +1,4 @@
-namespace Services.Voucher.Authorization
+namespace Services.Voucher.Features.AspNet.Authorization
 {
   public static class ApiKeys
   {

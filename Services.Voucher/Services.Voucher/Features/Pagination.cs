@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Services.Voucher.Models;
+using Services.Voucher.Contracts.Models;
 
-namespace Services.Voucher.Repository
+namespace Services.Voucher.Features
 {
   public static class Pagination
   {

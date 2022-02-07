@@ -1,8 +1,8 @@
 using AutoFixture;
 using NSubstitute;
+using Services.Voucher.Contracts;
+using Services.Voucher.Contracts.Models;
 using Services.Voucher.Controllers;
-using Services.Voucher.Models;
-using Services.Voucher.Repository;
 using Xunit;
 
 namespace Services.Voucher.Test.Unit.Controllers

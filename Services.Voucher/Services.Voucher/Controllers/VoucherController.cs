@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Services.Voucher.Authorization;
-using Services.Voucher.Models;
-using Services.Voucher.Repository;
-using Services.Voucher.Utils;
+using Services.Voucher.Contracts;
+using Services.Voucher.Contracts.Models;
+using Services.Voucher.Features;
+using Services.Voucher.Features.AspNet.Authorization;
 
 namespace Services.Voucher.Controllers
 {

@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Services.Voucher.Models;
+using Services.Voucher.Contracts;
+using Services.Voucher.Contracts.Models;
 
-namespace Services.Voucher.Repository
+namespace Services.Voucher.Features.Vouchers
 {
   public sealed class InMemoryTrigramVoucherSearch : IVoucherSearch
   {

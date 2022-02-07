@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Services.Voucher.Utils
+namespace Services.Voucher.Features
 {
   [ExcludeFromCodeCoverage]
   public static class Ensure

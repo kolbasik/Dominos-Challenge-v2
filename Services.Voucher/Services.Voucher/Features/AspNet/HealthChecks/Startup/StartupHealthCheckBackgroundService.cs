@@ -2,7 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 
-namespace Services.Voucher.HealthChecks.Startup
+namespace Services.Voucher.Features.AspNet.HealthChecks.Startup
 {
   internal sealed class StartupHealthCheckBackgroundService : BackgroundService
   {

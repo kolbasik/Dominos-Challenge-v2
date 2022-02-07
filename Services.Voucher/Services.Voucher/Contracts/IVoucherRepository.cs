@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using Services.Voucher.Models;
+using Services.Voucher.Contracts.Models;
 
-namespace Services.Voucher.Repository
+namespace Services.Voucher.Contracts
 {
   public interface IVoucherRepository
   {
